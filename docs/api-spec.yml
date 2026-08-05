@@ -1,0 +1,844 @@
+openapi: 3.0.0
+info:
+  title: Door API Specification
+  description: |
+    REST API for the Door ride-sharing and parcel-delivery platform. Handles user profiles, driver document uploads, route schedules, and bookings.
+    
+    The backend is implemented using ASP.NET Core and Entity Framework Core with SQL Server.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5278
+    description: Development Server
+  - url: https://doorapp.somee.com
+    description: Production Server
+
+paths:
+  /api/Usuarios/CrearUsuario:
+    post:
+      summary: Register a new user
+      description: Creates a passenger or driver user profile. Supports image uploads via form-data.
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateUsuarioForm'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuarios'
+        '400':
+          description: Registration failed or validation error
+        '500':
+          description: Server error
+
+  /api/Usuarios/EditarUsuario:
+    put:
+      summary: Edit user profile
+      description: Updates basic profile parameters and optionally changes the profile photo.
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EditUsuarioForm'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuarios'
+        '400':
+          description: Invalid request payload
+        '404':
+          description: User profile not found
+
+  /api/Usuarios/ObtenerUsuario:
+    get:
+      summary: Retrieve user by phone number
+      description: Finds user profiles mapping to a given cellular registration number.
+      tags:
+        - Usuarios
+      parameters:
+        - in: query
+          name: numeroCelular
+          required: true
+          schema:
+            type: string
+          description: Registered celular number
+      responses:
+        '200':
+          description: User found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDto'
+        '400':
+          description: Database exception or missing number
+
+  /api/Usuarios/ActivarUsuario:
+    put:
+      summary: Toggle user profile active status
+      description: Activates or deactivates a user login profile.
+      tags:
+        - Usuarios
+      parameters:
+        - in: query
+          name: idUsuario
+          required: true
+          schema:
+            type: integer
+          description: Primary Key ID of the target user
+        - in: query
+          name: activo
+          required: true
+          schema:
+            type: boolean
+          description: Toggle status (true to activate, false to deactivate)
+      responses:
+        '200':
+          description: Status changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuarios'
+        '400':
+          description: Invalid parameters
+        '404':
+          description: User not found
+
+  /api/Usuarios/ObtenerTiposUsuario:
+    get:
+      summary: Get user types list
+      description: Returns lookup configurations for user profiles (e.g. Passenger, Driver).
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TiposUsuario'
+
+  /api/Usuarios/GuardarDocumentos:
+    post:
+      summary: Store driver documents
+      description: Uploads licensing documents, vehicle specifications, and plate numbers for verification.
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SaveDocumentosForm'
+      responses:
+        '200':
+          description: Documents uploaded and mapped successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentosUsuario'
+        '400':
+          description: Request parsing error or database constraints violation
+
+  /api/Usuarios/ObtenerDocumentosUsuario:
+    get:
+      summary: Fetch user documents
+      description: Retrieves verification records, license plates, and document URLs for a driver.
+      tags:
+        - Usuarios
+      parameters:
+        - in: query
+          name: idUsuario
+          required: true
+          schema:
+            type: integer
+          description: User PK ID
+        - in: query
+          name: idTipoDocumento
+          required: true
+          schema:
+            type: integer
+          description: Lookup category ID of document
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentoDto'
+        '400':
+          description: Missing query parameter values
+
+  /api/Rutas/CrearRutaConductor:
+    post:
+      summary: Create route as driver
+      description: Defines origin and destination points, creating route schedules.
+      tags:
+        - Rutas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RutaConductorDto'
+      responses:
+        '200':
+          description: Route created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UbicacionesRuta'
+        '400':
+          description: Validation error (e.g. active route between locations already exists)
+
+  /api/Rutas/CrearReservaRuta:
+    post:
+      summary: Book a route
+      description: Submits a route booking for passenger seating or cargo parcel shipments.
+      tags:
+        - Rutas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservaRutaDto'
+      responses:
+        '200':
+          description: Reservation processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RutasConductor'
+        '400':
+          description: Booking operation failed
+
+  /api/Rutas/ObtenerUbicaciones:
+    get:
+      summary: List geographical locations
+      description: Retrieves supported checkpoints and coordinate points.
+      tags:
+        - Rutas
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ubicaciones'
+
+  /api/Rutas/ObtenerRutasConductor:
+    get:
+      summary: Get driver scheduled routes
+      description: Lists active or completed routes published by a specific driver.
+      tags:
+        - Rutas
+      parameters:
+        - in: query
+          name: idUsuario
+          required: true
+          schema:
+            type: integer
+          description: Driver user PK ID
+        - in: query
+          name: idEstadoRuta
+          required: true
+          schema:
+            type: integer
+          description: Route status filter ID
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RutasConductor'
+
+  /api/Rutas/ObtenerUbicacionesReserva:
+    get:
+      summary: Get locations for user reservation
+      description: Resolves location coordinates representing origin/destination stops for active passenger bookings.
+      tags:
+        - Rutas
+      parameters:
+        - in: query
+          name: idUsuario
+          required: true
+          schema:
+            type: integer
+          description: Passenger user PK ID
+        - in: query
+          name: idEstadoReserva
+          required: true
+          schema:
+            type: integer
+          description: Booking status filter ID
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ubicaciones'
+
+  /api/Rutas/ObtenerEstadosRuta:
+    get:
+      summary: List route states
+      description: Retrieves the lookup definitions for route statuses.
+      tags:
+        - Rutas
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstadosRuta'
+
+  /api/Rutas/ObtenerEstadosReserva:
+    get:
+      summary: List reservation states
+      description: Retrieves the lookup definitions for booking statuses.
+      tags:
+        - Rutas
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstadosReserva'
+
+  /api/Rutas/ObtenerTiposReserva:
+    get:
+      summary: List reservation types
+      description: Retrieves lookup types of booking configurations (Passenger, Cargo, or both).
+      tags:
+        - Rutas
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TiposReserva'
+
+  /api/Rutas/ObtenerReservasPorUsuario:
+    get:
+      summary: Query bookings by profile context
+      description: Retrieves passenger reservation lists (last 60 days) or cargo bookings mapping to a driver's route.
+      tags:
+        - Rutas
+      parameters:
+        - in: query
+          name: idUsuario
+          required: true
+          schema:
+            type: integer
+          description: Target User PK ID
+        - in: query
+          name: idtipoUsuario
+          required: true
+          schema:
+            type: integer
+          description: 'User profile context: 1 (Passenger), 2 (Driver)'
+        - in: query
+          name: idRutaConductor
+          required: true
+          schema:
+            type: integer
+          description: Driver route PK ID (Required if driver context is queried)
+      responses:
+        '200':
+          description: Successful query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idReserva:
+                      type: integer
+                    conductor:
+                      type: string
+                    descripcionRuta:
+                      type: string
+                    idEstadoRuta:
+                      type: integer
+                    descripcionEstado:
+                      type: string
+                    idEstadoReserva:
+                      type: integer
+                    fechaHora:
+                      type: string
+                      format: date-time
+                    idTipoReserva:
+                      type: integer
+                    cantidadPasajeros:
+                      type: integer
+                    direccionOrigen:
+                      type: string
+                    direccionDestino:
+                      type: string
+                    encomiendas:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Encomiendas'
+
+  /api/Rutas/CancelarReservaRuta:
+    post:
+      summary: Cancel a reservation
+      description: Transitions the reservation state to Cancelled (2).
+      tags:
+        - Rutas
+      parameters:
+        - in: query
+          name: idReservaRuta
+          required: true
+          schema:
+            type: integer
+          description: Reservation PK ID to cancel
+      responses:
+        '200':
+          description: Booking cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RutasReserva'
+        '400':
+          description: Cancellation failed
+
+components:
+  schemas:
+    Usuarios:
+      type: object
+      properties:
+        idUsuario:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          nullable: true
+        primerApellido:
+          type: string
+          nullable: true
+        segundoApellido:
+          type: string
+          nullable: true
+        direccion:
+          type: string
+          nullable: true
+        activo:
+          type: boolean
+        numeroCelular:
+          type: string
+          nullable: true
+        correo:
+          type: string
+          nullable: true
+        urlImagen:
+          type: string
+          nullable: true
+        numeroIdentificacion:
+          type: string
+          nullable: true
+        fechaNacimiento:
+          type: string
+          format: date-time
+        idTipoUsuario:
+          type: integer
+
+    UsuarioDto:
+      type: object
+      properties:
+        idUsuario:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          nullable: true
+        primerApellido:
+          type: string
+          nullable: true
+        segundoApellido:
+          type: string
+          nullable: true
+        direccion:
+          type: string
+          nullable: true
+        activo:
+          type: boolean
+        numeroCelular:
+          type: string
+          nullable: true
+        correo:
+          type: string
+          nullable: true
+        esConductor:
+          type: boolean
+        urlImagen:
+          type: string
+          nullable: true
+        numeroIdentificacion:
+          type: string
+          nullable: true
+        fechaNacimiento:
+          type: string
+          format: date-time
+        idTipoUsuario:
+          type: integer
+        urlDocumentos:
+          type: array
+          items:
+            type: string
+
+    TiposUsuario:
+      type: object
+      properties:
+        idTipoUsuario:
+          type: integer
+        descripcion:
+          type: string
+          nullable: true
+
+    DocumentosUsuario:
+      type: object
+      properties:
+        idDocumentoUsuario:
+          type: integer
+        urlDocumento:
+          type: string
+          nullable: true
+        idUsuario:
+          type: integer
+        idTipoDocumento:
+          type: integer
+        idInformacionConductor:
+          type: integer
+        verificado:
+          type: boolean
+
+    DocumentoDto:
+      type: object
+      properties:
+        idUsuario:
+          type: integer
+        idInformacionDocumento:
+          type: integer
+        idTipoDocumento:
+          type: integer
+        placa:
+          type: string
+          default: "No aplica"
+        licencia:
+          type: string
+          default: "No aplica"
+        tipoVehiculo:
+          type: string
+          default: "No aplica"
+        urlDocumentos:
+          type: array
+          items:
+            type: string
+
+    RutasConductor:
+      type: object
+      properties:
+        idRutaConductor:
+          type: integer
+        descripcion:
+          type: string
+          nullable: true
+        idUsuario:
+          type: integer
+          nullable: true
+        idEstadoRuta:
+          type: integer
+
+    UbicacionesRuta:
+      type: object
+      properties:
+        idUbicacionRuta:
+          type: integer
+        idUbicacion:
+          type: integer
+        idRutaConductor:
+          type: integer
+          nullable: true
+
+    Ubicaciones:
+      type: object
+      properties:
+        idUbicacion:
+          type: integer
+        nombre:
+          type: string
+          nullable: true
+        latitud:
+          type: string
+          nullable: true
+        longitud:
+          type: string
+          nullable: true
+
+    RutasReserva:
+      type: object
+      properties:
+        idRutaReserva:
+          type: integer
+        fechaHora:
+          type: string
+          format: date-time
+        idUsuario:
+          type: integer
+        idRutaConductor:
+          type: integer
+        cantidadPasajeros:
+          type: integer
+        direccionOrigen:
+          type: string
+        direccionDestino:
+          type: string
+        idTipoReserva:
+          type: integer
+        idEstadoReserva:
+          type: integer
+
+    EstadosRuta:
+      type: object
+      properties:
+        idEstadoRuta:
+          type: integer
+        descripcion:
+          type: string
+          nullable: true
+
+    EstadosReserva:
+      type: object
+      properties:
+        idEstadoReserva:
+          type: integer
+        descripcion:
+          type: string
+          nullable: true
+
+    TiposReserva:
+      type: object
+      properties:
+        idTipoReserva:
+          type: integer
+        descripcion:
+          type: string
+          nullable: true
+
+    Encomiendas:
+      type: object
+      properties:
+        idEncomienda:
+          type: integer
+        dimensiones:
+          type: string
+          nullable: true
+        destinatario:
+          type: string
+          nullable: true
+        telefono:
+          type: string
+          nullable: true
+        idTipoEncomienda:
+          type: integer
+        idRutaReserva:
+          type: integer
+          nullable: true
+
+    EncomiendaDto:
+      type: object
+      required:
+        - dimensiones
+        - idTipoEncomienda
+        - destinatario
+        - telefono
+      properties:
+        dimensiones:
+          type: string
+        idTipoEncomienda:
+          type: integer
+        destinatario:
+          type: string
+        telefono:
+          type: string
+
+    RutaConductorDto:
+      type: object
+      required:
+        - idUsuario
+        - idUbicacionOrigen
+        - idUbicacionDestino
+      properties:
+        idUsuario:
+          type: integer
+        idUbicacionOrigen:
+          type: integer
+        idUbicacionDestino:
+          type: integer
+        encomiendas:
+          type: array
+          items:
+            $ref: '#/components/schemas/EncomiendaDto'
+
+    ReservaRutaDto:
+      type: object
+      required:
+        - fechaHora
+        - idUsuario
+        - cantidadPasajeros
+        - direccionOrigen
+        - direccionDestino
+        - idTipoReserva
+        - idEstadoReserva
+        - descripcion
+      properties:
+        fechaHora:
+          type: string
+          format: date-time
+        idUsuario:
+          type: integer
+        idRutaConductor:
+          type: integer
+          nullable: true
+        cantidadPasajeros:
+          type: integer
+        direccionOrigen:
+          type: string
+        direccionDestino:
+          type: string
+        idTipoReserva:
+          type: integer
+        idEstadoReserva:
+          type: integer
+        descripcion:
+          type: string
+        encomiendas:
+          type: array
+          items:
+            $ref: '#/components/schemas/EncomiendaDto'
+
+    CreateUsuarioForm:
+      type: object
+      properties:
+        Nombre:
+          type: string
+        PrimerApellido:
+          type: string
+        SegundoApellido:
+          type: string
+        Direccion:
+          type: string
+        Activo:
+          type: boolean
+        NumeroCelular:
+          type: string
+        Correo:
+          type: string
+        NumeroIdentificacion:
+          type: string
+        FechaNacimiento:
+          type: string
+          format: date-time
+        IdTipoUsuario:
+          type: integer
+        Archivos:
+          type: array
+          items:
+            type: string
+            format: binary
+
+    EditUsuarioForm:
+      type: object
+      properties:
+        IdUsuario:
+          type: integer
+        Nombre:
+          type: string
+        PrimerApellido:
+          type: string
+        SegundoApellido:
+          type: string
+        Direccion:
+          type: string
+        Activo:
+          type: boolean
+        NumeroCelular:
+          type: string
+        Correo:
+          type: string
+        NumeroIdentificacion:
+          type: string
+        FechaNacimiento:
+          type: string
+          format: date-time
+        IdTipoUsuario:
+          type: integer
+        Archivos:
+          type: array
+          items:
+            type: string
+            format: binary
+
+    SaveDocumentosForm:
+      type: object
+      required:
+        - IdUsuario
+        - IdInformacionDocumento
+        - IdTipoDocumento
+      properties:
+        IdUsuario:
+          type: integer
+        IdInformacionDocumento:
+          type: integer
+        IdTipoDocumento:
+          type: integer
+        Placa:
+          type: string
+          default: "No aplica"
+        Licencia:
+          type: string
+          default: "No aplica"
+        TipoVehiculo:
+          type: string
+          default: "No aplica"
+        Archivos:
+          type: array
+          items:
+            type: string
+            format: binary

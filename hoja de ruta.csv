@@ -1,0 +1,46 @@
+Clave;Tipo de Incidencia;Principal;Resumen;Estado;Persona asignada;Sprint;Start date;Fecha de inicio deducida;Fecha de vencimiento;Fecha de vencimiento deducida;Issue color
+DOOR-6;Epic;;Diseño;Tareas por hacer;;;;31/03/2025;;31/03/2026;teal
+DOOR-98;Tarea;DOOR-6;QA Diseñar las vistas para tomar las fotos de los documentos conductor y vehiculo;FINALIZADO;Heider Alexander Gutierrez Montoya;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-129;Historia;DOOR-6;Diseño para el perfil del conductor;FINALIZADO;Heider Alexander Gutierrez Montoya;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-70;Historia;DOOR-6;Crear diseño para vista de llamada y de chat;FINALIZADO;Heider Alexander Gutierrez Montoya;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-97;Tarea;DOOR-6;QA Diseñar la interna de la notificacion;FINALIZADO;Heider Alexander Gutierrez Montoya;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-111;Tarea;DOOR-6;QA Diseñar las opciones del menu cuando el rol es conductor;FINALIZADO;Heider Alexander Gutierrez Montoya;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-99;Tarea;DOOR-6;QA Diseñar distintivo de reservas de pasajero o de encomienda;FINALIZADO;Heider Alexander Gutierrez Montoya;Tablero Sprint 13;;31/03/2025;;14/04/2025;purple
+DOOR-124;Historia;DOOR-6;QA Crear diseño para platillas de correo;Tareas por hacer;Heider Alexander Gutierrez Montoya;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-135;Historia;DOOR-6;Crear el diseño del Admin;Tareas por hacer;Heider Alexander Gutierrez Montoya;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-10;Epic;;Flujo Base;Tareas por hacer;;;;3/06/2025;;31/03/2026;dark_blue
+DOOR-90;Historia;DOOR-10;QA Hacer la interna de la notificacion;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-105;Historia;DOOR-10;QA Hacer la vista de ayuda y soporte;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-106;Historia;DOOR-10;Crear la vista sobre nosotros;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-122;Historia;DOOR-10;QA Hacer la funcionalidad del buscador de las FAQs;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-123;Historia;DOOR-10;QA Contactenos ajustar la funcionalidad;Tareas por hacer;Vicente Chavarro;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-132;Historia;DOOR-10;Crear la interna de la notificacion;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-17;Epic;;Mejoras QA;Tareas por hacer;Julian Garcia;;;3/06/2025;;31/03/2026;purple
+DOOR-116;Error;DOOR-17;QA No se carga la imagen de perfil en ninguno de los dos roles;Tareas por hacer;Vicente Chavarro;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-89;Tarea;DOOR-17;QA hacer el flujo para asignar una direccion como predeterminada;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-119;Tarea;DOOR-17;QA Ajustar la opcion de como se solicitan los documentos;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-114;Tarea;DOOR-17;QA Hay mejorar el flujo de seleccion de los documentos ;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 15;;22/07/2025;;5/08/2025;purple
+DOOR-120;Tarea;DOOR-17;QA Ajustar los textos de mascotas;En curso;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-121;Tarea;DOOR-17;QA La placa solo debe permitirse en mayusculas;En curso;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-110;Error;DOOR-17;QA Cuando hay cambio de rol no se marca seleccionado el boton;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-109;Error;DOOR-17;QA si esta en la opcion seleccionada no debe mostrar el modal;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-115;Error;DOOR-17;QA No hay forma de devolverse al rol usuario;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-107;Tarea;DOOR-17;QA Ajustar el distintivo en la reserva;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-108;Error;DOOR-17;QA Icono de inicio se repite en el footer;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-113;Tarea;DOOR-17;QA mejorar al concatenar el texto en la reserva;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-117;Tarea;DOOR-17;QA Ajustra el mensaje de licencia;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-38;Epic;;Solicitud Servicio;Tareas por hacer;;;;17/03/2026;;31/03/2026;dark_green
+DOOR-131;Historia;DOOR-38;Crear las vista de llamada y de chat;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-95;Epic;;Conductor;Tareas por hacer;;;;3/06/2025;;31/03/2026;dark_yellow
+DOOR-102;Historia;DOOR-95;Crear la vista de los documentos del vehiculo;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-101;Historia;DOOR-95;Crear la vista de los datos del conductor;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-100;Historia;DOOR-95;Crear la vista inicial del conductor;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-118;Historia;DOOR-95;Crear las opciones para tomar una foto o cargar una imagen;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-112;Historia;DOOR-95;Crear opciones del footer para conductor;FINALIZADO;Luis Anderson Rujeles;Tablero Sprint 14;;3/06/2025;;17/06/2025;purple
+DOOR-125;Historia;DOOR-95;Hacer la vista del detalle de la ruta;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-126;Historia;DOOR-95;Hacer el modal de confirmacion de ruta;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-127;Historia;DOOR-95;Hacer la vista cuando el conductor esta en ruta;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-128;Historia;DOOR-95;Hacer el modal cuando se finaliza la ruta;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-130;Historia;DOOR-95;Crear el perfil del conductor;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-133;Historia;DOOR-95;Crear las opciones del menu cuando el rol es conductor;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
+DOOR-134;Historia;DOOR-95;Crear las ventas y el flujo del carguie dedocumentos, con las nuevas vistas;Tareas por hacer;Luis Anderson Rujeles;Tablero Sprint 16;;17/03/2026;;31/03/2026;purple
